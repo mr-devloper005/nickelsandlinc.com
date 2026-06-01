@@ -28,11 +28,21 @@ function uniquePosts(posts: SitePost[]) {
   return Array.from(new Map(posts.map((post) => [post.slug || post.id || post.title, post])).values())
 }
 
+function hasRealImage(post: SitePost) {
+  const content = post.content && typeof post.content === 'object' ? post.content as Record<string, unknown> : {}
+  const isUrl = (value: unknown) => typeof value === 'string' && (value.startsWith('/') || /^https?:\/\//i.test(value))
+  const mediaImage = Array.isArray(post.media) && post.media.some((item) => isUrl(item?.url))
+  const contentImageList = Array.isArray(content.images) && content.images.some((item) => isUrl(item))
+  const singleImage = isUrl(content.image) || isUrl(content.featuredImage) || isUrl(content.thumbnail) || isUrl(content.logo) || isUrl(content.avatar)
+  return mediaImage || contentImageList || singleImage
+}
+
 export default async function HomePage() {
   const primaryTask = (SITE_CONFIG.tasks.find((task) => task.enabled)?.key || 'article') as TaskKey
   const primaryRoute = SITE_CONFIG.taskViews[primaryTask] || `/${primaryTask}`
   const taskFeed: TaskFeedItem[] = await fetchHomeTaskFeed(12, { timeoutMs: 2500 })
-  const primaryPosts = uniquePosts(taskFeed.find(({ task }) => task.key === primaryTask)?.posts || taskFeed.flatMap(({ posts }) => posts)).slice(0, 24)
+  const primaryPostsSource = uniquePosts(taskFeed.find(({ task }) => task.key === primaryTask)?.posts || taskFeed.flatMap(({ posts }) => posts))
+  const primaryPosts = primaryPostsSource.filter(hasRealImage).slice(0, 24)
   const timeSections: HomeTimeSection[] = await fetchHomeTimeSections(primaryTask, { limit: 8, timeoutMs: 2500 })
   const baseUrl = SITE_CONFIG.baseUrl.replace(/\/$/, '')
 
@@ -56,7 +66,7 @@ export default async function HomePage() {
       <EditableStoryRail primaryTask={primaryTask} primaryRoute={primaryRoute} posts={primaryPosts} timeSections={timeSections} />
       <EditableMagazineSplit primaryTask={primaryTask} primaryRoute={primaryRoute} posts={primaryPosts} timeSections={timeSections} />
       <EditableTimeCollections primaryTask={primaryTask} primaryRoute={primaryRoute} posts={primaryPosts} timeSections={timeSections} />
-      <EditableHomeCta />
+      <EditableHomeCta primaryTask={primaryTask} primaryRoute={primaryRoute} posts={primaryPosts} timeSections={timeSections} />
       </main>
     </EditableSiteShell>
   )
