@@ -1,28 +1,45 @@
-import { SITE_CONFIG } from '@/lib/site-config'
+﻿import { SITE_CONFIG } from '@/lib/site-config'
 import { pagesContent } from '@/editable/content/pages.content'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
 
 export default function AboutPage() {
   return (
     <EditableSiteShell>
-      <main className="bg-[var(--editable-page-bg,#fffaf3)] px-4 py-14 text-[var(--editable-page-text,#241915)] sm:px-6 lg:px-8">
-        <section className="mx-auto grid max-w-[var(--editable-container)] gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <article className="rounded-[2.5rem] border border-[var(--editable-border)] bg-white/80 p-8 shadow-sm lg:p-12">
-            <p className="text-xs font-black uppercase tracking-[0.24em] opacity-55">{pagesContent.about.badge}</p>
-            <h1 className="mt-5 text-5xl font-black tracking-[-0.07em]">About {SITE_CONFIG.name}</h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 opacity-70">{pagesContent.about.description}</p>
-            <div className="mt-8 space-y-4 text-sm leading-8 opacity-75">
-              {pagesContent.about.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            </div>
-          </article>
-          <aside className="space-y-4">
-            {pagesContent.about.values.map((value) => (
-              <div key={value.title} className="rounded-[2rem] border border-[var(--editable-border)] bg-white/70 p-6 shadow-sm">
-                <h2 className="text-xl font-black tracking-[-0.04em]">{value.title}</h2>
-                <p className="mt-3 text-sm leading-7 opacity-70">{value.description}</p>
+      <main className="bg-[#efefef] text-[#1f1f1f]">
+        <section className="border-b border-black/10 bg-[#ececec]">
+          <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6 lg:px-8">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9E3B3B]">{pagesContent.about.badge}</p>
+            <h1 className="mt-3 max-w-4xl text-5xl font-semibold leading-tight tracking-[-0.03em] sm:text-6xl">About {SITE_CONFIG.name}</h1>
+            <p className="mt-5 max-w-3xl text-base leading-8 text-black/70">{pagesContent.about.description}</p>
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
+          <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+            <article className="rounded-md border border-black/15 bg-white p-6 shadow-sm sm:p-8">
+              <h2 className="text-3xl font-semibold tracking-[-0.02em]">What We Build</h2>
+              <div className="mt-5 space-y-4 text-sm leading-8 text-black/75">
+                {pagesContent.about.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
               </div>
-            ))}
-          </aside>
+            </article>
+
+            <div className="grid gap-4">
+              {pagesContent.about.values.map((value) => (
+                <article key={value.title} className="rounded-md border border-black/15 bg-white p-6 shadow-sm">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9E3B3B]">Core Principle</p>
+                  <h3 className="mt-2 text-2xl font-semibold leading-tight">{value.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-black/70">{value.description}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-md border border-black/15 bg-[#21242b] p-8 text-[#f4ece3]">
+            <h2 className="text-3xl font-semibold tracking-[-0.02em]">Built for visual-first discovery</h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-white/75">Our platform keeps stories, profiles, visuals, and categories connected so users can browse smoothly without context switching.</p>
+          </div>
         </section>
       </main>
     </EditableSiteShell>

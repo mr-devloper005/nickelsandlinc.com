@@ -92,8 +92,8 @@ export function TaskDetailView({ task, post, related, comments = [] }: { task: T
 function BackLink({ task }: { task: TaskKey }) {
   const taskConfig = getTaskConfig(task)
   return (
-    <Link href={taskConfig?.route || '/'} className="inline-flex items-center gap-2 rounded-full border border-[var(--editable-border)] bg-white/70 px-4 py-2 text-sm font-black">
-      <ArrowLeft className="h-4 w-4" /> Back to {taskConfig?.label || 'posts'}
+    <Link href={taskConfig?.route || '/'} className="inline-flex items-center gap-2 rounded-full border border-[var(--editable-border)] bg-white/70 px-4 py-2 text-sm font-black text-black">
+      <ArrowLeft className="h-4 w-4" /> View all {taskConfig?.label || 'posts'}
     </Link>
   )
 }
@@ -189,25 +189,31 @@ function ClassifiedDetail({ post, related }: { post: SitePost; related: SitePost
 function ImageDetail({ post, related }: { post: SitePost; related: SitePost[] }) {
   const images = getImages(post)
   return (
-    <section className="mx-auto max-w-[var(--editable-container)] px-4 py-10 sm:px-6 lg:px-8 lg:py-16">
-      <BackLink task="image" />
-      <div className="mt-8 grid gap-8 lg:grid-cols-[0.72fr_1.28fr]">
-        <aside className="rounded-[2.5rem] border border-[var(--editable-border)] bg-white p-7 lg:sticky lg:top-24 lg:self-start">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[var(--detail-text)] px-4 py-2 text-xs font-black uppercase tracking-[0.2em] text-[var(--detail-bg)]"><Camera className="h-4 w-4" /> Image story</div>
-          <h1 className="mt-6 text-4xl font-black leading-[0.98] tracking-[-0.07em] sm:text-5xl">{post.title}</h1>
-          <p className="mt-5 text-base leading-8 opacity-70">{summaryText(post)}</p>
-          <BodyContent post={post} compact />
-        </aside>
-        <div className="columns-1 gap-5 space-y-5 md:columns-2">
+    <section className="bg-[#efefef]">
+      <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <BackLink task="image" />
+        <div className="mt-6 overflow-hidden rounded-md border border-black/15 bg-[#ececec]">
+          <div className="grid gap-0 lg:grid-cols-[0.78fr_1.22fr]">
+            <div className="p-6 sm:p-8">
+              <h1 className="text-4xl font-semibold leading-tight tracking-[-0.03em] text-[#1f1f1f] sm:text-5xl">{post.title}</h1>
+              <p className="mt-4 text-sm leading-7 text-black/65">{summaryText(post)}</p>
+              <div className="article-content mt-6 border-t border-black/10 pt-5 text-[15px] leading-7 text-black/75" dangerouslySetInnerHTML={{ __html: formatPlainText(getBody(post)) }} />
+            </div>
+            <div className="home-hero-image relative min-h-[320px] overflow-hidden border-l border-black/10 bg-[#ddd]">
+              <img src={images[0] || '/placeholder.svg?height=900&width=1200'} alt={post.title} className="h-full w-full object-cover" />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 columns-1 gap-5 space-y-5 md:columns-2 xl:columns-3">
           {(images.length ? images : ['/placeholder.svg?height=900&width=1200']).map((image, index) => (
-            <figure key={`${image}-${index}`} className="break-inside-avoid overflow-hidden rounded-[2rem] border border-[var(--editable-border)] bg-white shadow-sm">
-              <img src={image} alt="" className="w-full object-cover" />
-              {index === 0 ? <figcaption className="p-5 text-sm font-bold opacity-65">Featured visual from this image post.</figcaption> : null}
+            <figure key={`${image}-${index}`} className="break-inside-avoid overflow-hidden rounded-md border border-black/15 bg-white shadow-sm">
+              <img src={image} alt={`${post.title} ${index + 1}`} className="w-full object-cover transition duration-500 hover:scale-[1.02]" />
             </figure>
           ))}
         </div>
+
       </div>
-      <div className="mt-10"><RelatedPanel task="image" post={post} related={related} /></div>
     </section>
   )
 }
@@ -261,24 +267,62 @@ function PdfDetail({ post, related }: { post: SitePost; related: SitePost[] }) {
 function ProfileDetail({ post, related }: { post: SitePost; related: SitePost[] }) {
   const images = getImages(post)
   const role = getField(post, ['role', 'designation', 'company', 'location'])
+  const address = getField(post, ['address', 'location', 'city'])
   const website = getField(post, ['website', 'url'])
   const email = getField(post, ['email'])
   return (
-    <section className="mx-auto grid max-w-[var(--editable-container)] gap-8 px-4 py-10 sm:px-6 lg:grid-cols-[420px_minmax(0,1fr)] lg:px-8 lg:py-16">
-      <aside className="rounded-[2.7rem] border border-[var(--editable-border)] bg-white p-8 text-center shadow-[0_30px_90px_rgba(15,23,42,0.08)] lg:sticky lg:top-24 lg:self-start">
-        <BackLink task="profile" />
-        <div className="mx-auto mt-10 flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-[var(--detail-bg)] ring-1 ring-[var(--editable-border)]">
-          {images[0] ? <img src={images[0]} alt="" className="h-full w-full object-cover" /> : <UserRound className="h-16 w-16 opacity-45" />}
-        </div>
-        <h1 className="mt-6 text-4xl font-black leading-[0.98] tracking-[-0.07em]">{post.title}</h1>
-        {role ? <p className="mt-3 text-xs font-black uppercase tracking-[0.18em] text-[var(--detail-accent)]">{role}</p> : null}
-        <ContactAction website={website} email={email} />
-      </aside>
-      <article className="rounded-[2.7rem] border border-[var(--editable-border)] bg-white p-7 shadow-sm sm:p-10">
-        <BodyContent post={post} />
-        <ImageStrip images={images.slice(1)} label="Profile gallery" />
-        <RelatedPanel task="profile" post={post} related={related} />
-      </article>
+    <section className="bg-[#efefef]">
+      <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+        <article className="overflow-hidden rounded-md border border-black/15 bg-white shadow-sm">
+          <div className="relative h-52 overflow-hidden bg-[#9E3B3B] sm:h-60">
+            <img src={images[2] || images[1] || images[0] || '/placeholder.svg?height=700&width=1800'} alt={post.title} className="h-full w-full object-cover opacity-35" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(158,59,59,0.65),rgba(158,59,59,0.92))]" />
+          </div>
+
+          <div className="relative px-5 pb-6 sm:px-7">
+            <div className="-mt-14 grid gap-6 lg:grid-cols-[170px_minmax(0,1fr)] lg:items-start">
+              <div className="mx-auto w-fit rounded-full border-4 border-white bg-[#ea7b7b] p-1 shadow-lg lg:mx-0">
+                <div className="flex h-32 w-32 items-center justify-center overflow-hidden rounded-full bg-[#ececec]">
+                  {images[0] ? <img src={images[0]} alt={post.title} className="h-full w-full object-cover" /> : <UserRound className="h-14 w-14 text-black/35" />}
+                </div>
+              </div>
+
+              <div className="min-w-0 pt-8 sm:pt-10">
+                <h1 className="text-5xl font-semibold leading-tight tracking-[-0.03em] text-[#1f1f1f] sm:text-6xl">{post.title}</h1>
+                {role ? <p className="mt-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#9E3B3B]">{role}</p> : null}
+                <p className="mt-4 text-sm leading-7 text-black/70">{summaryText(post) || 'Profile overview and business details are available below.'}</p>
+                {address ? <p className="mt-3 text-sm font-medium text-black/70">{address}</p> : null}
+                {website ? <Link href={website} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm font-semibold text-[#9E3B3B] underline underline-offset-2">{website.replace(/^https?:\/\//, '')}</Link> : null}
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <Link href="/login" className="rounded bg-[#D25353] px-5 py-2.5 text-center text-sm font-semibold text-white hover:bg-[#9E3B3B]">Follow</Link>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 border-t border-black/10 pt-6">
+              <div className="grid gap-5">
+                <div className="rounded-md border border-black/10 bg-[#f7f7f7] p-5">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9E3B3B]">About</p>
+                  <div className="article-content mt-3 text-[18px] leading-9 text-black/80" dangerouslySetInnerHTML={{ __html: formatPlainText(getBody(post)) }} />
+                </div>
+              </div>
+            </div>
+
+            {images.slice(1).length ? (
+              <div className="mt-6 border-t border-black/10 pt-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9E3B3B]">Gallery</p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  {images.slice(1, 9).map((image, index) => (
+                    <figure key={`${image}-${index}`} className="overflow-hidden rounded-sm border border-black/10 bg-[#f5f5f5]">
+                      <img src={image} alt={`${post.title} ${index + 1}`} className="aspect-[4/3] w-full object-cover transition duration-500 hover:scale-[1.03]" />
+                    </figure>
+                  ))}
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </article>
+      </div>
     </section>
   )
 }
@@ -372,6 +416,17 @@ function RelatedPanel({ task, post, related, compact = false }: { task: TaskKey;
 
 function RelatedCard({ task, post }: { task: TaskKey; post: SitePost }) {
   const image = getImages(post)[0]
+  if (task === 'image') {
+    return (
+      <article className="visual-static-card flex gap-3 rounded-2xl border border-[var(--editable-border)] bg-white p-3">
+        {image ? <img src={image} alt="" className="h-20 w-20 shrink-0 rounded-xl object-cover" /> : <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[var(--detail-bg)]"><FileText className="h-6 w-6 opacity-45" /></div>}
+        <div className="min-w-0">
+          <h3 className="line-clamp-3 text-sm font-black leading-tight tracking-[-0.03em]">{post.title}</h3>
+          <p className="mt-2 line-clamp-2 text-xs leading-5 opacity-60">{summaryText(post)}</p>
+        </div>
+      </article>
+    )
+  }
   return (
     <Link href={buildPostUrl(task, post.slug)} className="group flex gap-3 rounded-2xl border border-[var(--editable-border)] bg-white p-3 transition hover:-translate-y-0.5 hover:shadow-lg">
       {image && task !== 'sbm' ? <img src={image} alt="" className="h-20 w-20 shrink-0 rounded-xl object-cover" /> : <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-xl bg-[var(--detail-bg)]"><FileText className="h-6 w-6 opacity-45" /></div>}
