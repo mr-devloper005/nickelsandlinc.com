@@ -52,32 +52,32 @@ export const pagesContent = {
     },
   },
   about: {
-    badge: 'Our Story',
-    title: 'A calmer, clearer way to explore content.',
-    description: `${slot4BrandConfig.siteName} is built to make long-form reading, visual discovery, and supporting resources feel like one unified experience.`,
+    badge: 'About The Platform',
+    title: 'A premium visual discovery experience for modern categories.',
+    description: `${slot4BrandConfig.siteName} brings image-led collections, category pages, profiles, and stories into one polished browsing flow.`,
     paragraphs: [
-      'Instead of splitting everything into disconnected pages, the platform keeps related content easy to move through and easy to understand.',
-      'Whether someone starts with an article, listing, image post, or resource page, they can continue exploring without losing context.',
+      'We designed the experience to feel clean, rich, and easy to navigate across every section of the site.',
+      'From image galleries and profiles to business categories and editorial pages, each surface is connected for smooth discovery.',
     ],
     values: [
       {
-        title: 'Reading-first experience',
-        description: 'We prioritize clarity, pacing, and structure so people can read, browse, and discover without noise.',
+        title: 'Visual-first design',
+        description: 'Layouts are structured around strong imagery with elegant spacing and consistent rhythm.',
       },
       {
-        title: 'Connected content surfaces',
-        description: 'Articles, visual posts, listings, resources, and profiles stay connected so discovery feels natural across the site.',
+        title: 'Connected sections',
+        description: 'Categories, collections, profiles, and posts are linked so browsing always feels continuous.',
       },
       {
-        title: 'Simple and trustworthy',
-        description: 'We focus on clean navigation and clear page structure to help visitors find useful content faster.',
+        title: 'Clear and usable',
+        description: 'We keep navigation straightforward and content blocks readable on both desktop and mobile.',
       },
     ],
   },
   contact: {
     eyebrow: `Contact ${slot4BrandConfig.siteName}`,
-    title: 'A support page that matches the product, not a generic contact form.',
-    description: 'Tell us what you are trying to publish, fix, or launch. We will route it through the right lane instead of forcing every request into the same support bucket.',
+    title: 'Let us help with your next visual or category project.',
+    description: 'Share your request and we will guide you to the right path for publishing, collections, profiles, or business category expansion.',
     formTitle: 'Send a message',
   },
   detailPages: {

@@ -92,6 +92,95 @@ export function TaskArchiveView({ task, posts, pagination, category, basePath }:
   const archiveVars = { '--archive-bg': preset.colors.background, '--archive-text': preset.colors.foreground, '--archive-surface': preset.colors.surface, '--archive-accent': preset.colors.accent } as CSSProperties
   const categoryLabel = category === 'all' ? 'All categories' : CATEGORY_OPTIONS.find((item) => item.slug === category)?.name || category
 
+  if (task === 'profile') {
+    return (
+      <EditableSiteShell>
+        <main className="bg-[#efefef] text-[#1f1f1f]">
+          <section className="border-b border-black/10 bg-[#ececec]">
+            <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9E3B3B]">Profile Dashboard</p>
+              <h1 className="mt-2 text-5xl font-semibold leading-tight tracking-[-0.03em]">Discover Featured Profiles</h1>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-black/65">{voice?.description || 'Browse curated creators, businesses, and teams with profile-first cards and clean navigation.'}</p>
+              <form action={basePath} className="mt-6 grid gap-3 rounded-md border border-black/15 bg-white p-4 sm:grid-cols-[1fr_auto_auto] sm:items-center">
+                <select name="category" defaultValue={category} className="h-11 rounded border border-black/20 bg-white px-3 text-sm font-medium outline-none">
+                  <option value="all">All categories</option>
+                  {CATEGORY_OPTIONS.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
+                </select>
+                <button className="h-11 rounded bg-[#D25353] px-5 text-sm font-semibold text-white">Apply filter</button>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-black/55">Showing: {categoryLabel}</p>
+              </form>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
+            {posts.length ? (
+              <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {posts.map((post) => <ProfileArchiveCard key={post.id || post.slug} post={post} href={`${basePath}/${post.slug}` || buildPostUrl(task, post.slug)} />)}
+              </div>
+            ) : (
+              <div className="rounded-md border border-dashed border-black/25 bg-white p-10 text-center">
+                <Search className="mx-auto h-8 w-8 opacity-45" />
+                <h2 className="mt-4 text-3xl font-semibold">No profiles found</h2>
+                <p className="mt-2 text-sm opacity-65">Try another category or refresh after publishing profiles.</p>
+              </div>
+            )}
+
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              {pagination.hasPrevPage ? <Link href={pageHref(basePath, category, page - 1)} className="rounded border border-black/20 bg-white px-5 py-2.5 text-sm font-semibold">Previous</Link> : null}
+              <span className="rounded bg-[#9E3B3B] px-5 py-2.5 text-sm font-semibold text-white">Page {page} of {pagination.totalPages || 1}</span>
+              {pagination.hasNextPage ? <Link href={pageHref(basePath, category, page + 1)} className="rounded border border-black/20 bg-white px-5 py-2.5 text-sm font-semibold">Next</Link> : null}
+            </div>
+          </section>
+        </main>
+      </EditableSiteShell>
+    )
+  }
+
+  if (task === 'image') {
+    return (
+      <EditableSiteShell>
+        <main className="bg-[#efefef] text-[#1f1f1f]">
+          <section className="border-b border-black/10 bg-[#ececec]">
+            <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9E3B3B]">Image Discovery</p>
+              <h1 className="mt-2 text-5xl font-semibold leading-tight tracking-[-0.03em]">Browse Visual Collections</h1>
+              <p className="mt-4 max-w-3xl text-sm leading-7 text-black/65">{voice?.description || 'Explore image-first posts by category with a clean, premium browsing rhythm.'}</p>
+
+              <form action={basePath} className="mt-7 grid gap-3 rounded-md border border-black/15 bg-white p-4 sm:grid-cols-[1fr_auto_auto] sm:items-center">
+                <select name="category" defaultValue={category} className="h-11 rounded border border-black/20 bg-white px-3 text-sm font-medium outline-none">
+                  <option value="all">All categories</option>
+                  {CATEGORY_OPTIONS.map((item) => <option key={item.slug} value={item.slug}>{item.name}</option>)}
+                </select>
+                <button className="h-11 rounded border border-black/20 bg-[#D25353] px-5 text-sm font-semibold text-white">Apply filter</button>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-black/55">Showing: {categoryLabel}</p>
+              </form>
+            </div>
+          </section>
+
+          <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
+            {posts.length ? (
+              <div className="columns-1 gap-5 space-y-5 md:columns-2 xl:columns-3">
+                {posts.map((post, index) => <ImageArchiveCard key={post.id || post.slug} post={post} href={`${basePath}/${post.slug}` || buildPostUrl(task, post.slug)} index={index} />)}
+              </div>
+            ) : (
+              <div className="rounded-md border border-dashed border-black/25 bg-white p-10 text-center">
+                <Search className="mx-auto h-8 w-8 opacity-45" />
+                <h2 className="mt-4 text-3xl font-semibold">No posts found</h2>
+                <p className="mt-2 text-sm opacity-65">Try another category or refresh this page after publishing new content.</p>
+              </div>
+            )}
+
+            <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+              {pagination.hasPrevPage ? <Link href={pageHref(basePath, category, page - 1)} className="rounded border border-black/20 bg-white px-5 py-2.5 text-sm font-semibold">Previous</Link> : null}
+              <span className="rounded bg-[#9E3B3B] px-5 py-2.5 text-sm font-semibold text-white">Page {page} of {pagination.totalPages || 1}</span>
+              {pagination.hasNextPage ? <Link href={pageHref(basePath, category, page + 1)} className="rounded border border-black/20 bg-white px-5 py-2.5 text-sm font-semibold">Next</Link> : null}
+            </div>
+          </section>
+        </main>
+      </EditableSiteShell>
+    )
+  }
+
   return (
     <EditableSiteShell>
       <main style={archiveVars} className="bg-[var(--archive-bg)] text-[var(--archive-text)]">
@@ -224,13 +313,13 @@ function ClassifiedArchiveCard({ post, href }: { post: SitePost; href: string })
 function ImageArchiveCard({ post, href, index }: { post: SitePost; href: string; index: number }) {
   const image = getImage(post)
   return (
-    <Link href={href} className="group mb-5 block break-inside-avoid overflow-hidden rounded-[2rem] border border-[var(--editable-border)] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <Link href={href} className="group mb-5 block break-inside-avoid overflow-hidden rounded-md border border-black/15 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-lg">
       <div className={index % 3 === 0 ? 'aspect-[3/4]' : 'aspect-[4/3]'}>
-        <img src={image} alt="" className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+        <img src={image} alt={post.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
       </div>
       <div className="p-5">
-        <div className="inline-flex items-center gap-2 rounded-full bg-[var(--archive-bg)] px-3 py-1 text-[10px] font-black uppercase tracking-[0.16em]"><ImageIcon className="h-3 w-3" /> Visual</div>
-        <h2 className="mt-4 line-clamp-3 text-xl font-black leading-tight tracking-[-0.04em]">{post.title}</h2>
+        <div className="inline-flex items-center gap-2 rounded bg-[#FFEAD3] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#9E3B3B]"><ImageIcon className="h-3 w-3" /> Visual</div>
+        <h2 className="mt-4 line-clamp-3 text-xl font-semibold leading-tight tracking-[-0.02em] text-[#1f1f1f]">{post.title}</h2>
       </div>
     </Link>
   )
@@ -270,13 +359,21 @@ function ProfileArchiveCard({ post, href }: { post: SitePost; href: string }) {
   const avatar = getImages(post)[0]
   const role = getField(post, ['role', 'designation', 'company', 'location'])
   return (
-    <Link href={href} className="group rounded-[2rem] border border-[var(--editable-border)] bg-white p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-      <div className="mx-auto flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-[var(--archive-bg)] ring-1 ring-[var(--editable-border)]">
-        {avatar ? <img src={avatar} alt="" className="h-full w-full object-cover" /> : <UserRound className="h-10 w-10 opacity-45" />}
+    <Link href={href} className="group overflow-hidden rounded-md border border-black/15 bg-white shadow-sm transition duration-300 hover:-translate-y-0.5 hover:shadow-lg">
+      <div className="relative h-24 overflow-hidden bg-[#9E3B3B]">
+        <img src={getImages(post)[1] || avatar || '/placeholder.svg?height=240&width=800'} alt="" className="h-full w-full object-cover opacity-30" />
       </div>
-      <h2 className="mt-5 text-xl font-black leading-tight tracking-[-0.04em]">{post.title}</h2>
-      {role ? <p className="mt-2 text-xs font-black uppercase tracking-[0.16em] text-[var(--archive-accent)]">{role}</p> : null}
-      <p className="mt-4 line-clamp-3 text-sm leading-6 opacity-65">{getSummary(post)}</p>
+      <div className="-mt-10 px-6 pb-6 text-center">
+        <div className="mx-auto flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-[#ececec]">
+          {avatar ? <img src={avatar} alt="" className="h-full w-full object-cover" /> : <UserRound className="h-10 w-10 opacity-45" />}
+        </div>
+      </div>
+      <div className="px-6 pb-6 text-center">
+        <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em] text-[#1f1f1f]">{post.title}</h2>
+        {role ? <p className="mt-2 text-xs font-semibold uppercase tracking-[0.16em] text-[#9E3B3B]">{role}</p> : null}
+        <p className="mt-4 line-clamp-3 text-sm leading-6 text-black/65">{getSummary(post)}</p>
+      </div>
+      <div className="border-t border-black/10 bg-[#f8f8f8] px-6 py-3 text-center text-xs font-semibold uppercase tracking-[0.14em] text-[#9E3B3B]">Open profile</div>
     </Link>
   )
 }
