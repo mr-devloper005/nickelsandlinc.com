@@ -1,43 +1,28 @@
-﻿import type { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { buildPageMetadata } from '@/lib/seo'
 import { EditableSiteShell } from '@/editable/shell/EditableSiteShell'
 import { EditableLocalLoginForm } from '@/editable/components/EditableLocalAuthForms'
+import { pagesContent } from '@/editable/content/pages.content'
 
 export async function generateMetadata(): Promise<Metadata> {
-  return buildPageMetadata({ path: '/login', title: 'Login', description: 'Sign in to continue browsing profiles, collections, and business categories.' })
+  return buildPageMetadata({ path: '/login', title: 'Login', description: pagesContent.auth.login.metadataDescription })
 }
 
 export default function LoginPage() {
   return (
     <EditableSiteShell>
-      <main className="bg-[#efefef] text-[#1f1f1f]">
-        <section className="border-b border-black/10 bg-[#ececec]">
-          <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6 lg:px-8">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#9E3B3B]">Account Access</p>
-            <h1 className="mt-3 max-w-4xl text-5xl font-semibold leading-tight tracking-[-0.03em] sm:text-6xl">Welcome back to your dashboard</h1>
-            <p className="mt-5 max-w-2xl text-base leading-8 text-black/70">Sign in to continue exploring profile pages, category collections, and visual content with a seamless experience.</p>
+      <main className="bg-[var(--editable-page-bg,#fff7ee)] text-[var(--editable-page-text,#2f1d16)]">
+        <section className="mx-auto grid min-h-[calc(100vh-12rem)] max-w-[var(--editable-container)] items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:px-8">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.28em] opacity-55">{pagesContent.auth.login.badge}</p>
+            <h1 className="mt-5 max-w-xl text-5xl font-black leading-[0.98] tracking-[-0.07em] sm:text-6xl">{pagesContent.auth.login.title}</h1>
+            <p className="mt-6 max-w-lg text-sm leading-8 opacity-70">{pagesContent.auth.login.description}</p>
           </div>
-        </section>
-
-        <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr]">
-            <article className="rounded-md border border-black/15 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="text-3xl font-semibold tracking-[-0.02em]">Login</h2>
-              <p className="mt-2 text-sm leading-7 text-black/65">Use your registered email and password to access your account.</p>
-              <EditableLocalLoginForm />
-              <p className="mt-6 text-sm text-black/65">New here? <Link href="/signup" className="font-semibold text-[#9E3B3B] underline underline-offset-4">Create an account</Link></p>
-            </article>
-
-            <article className="rounded-md border border-black/15 bg-[#21242b] p-6 text-[#f4ece3] shadow-sm sm:p-8">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[#EA7B7B]">Why sign in</p>
-              <h3 className="mt-3 text-3xl font-semibold leading-tight tracking-[-0.02em]">Keep your workflow connected</h3>
-              <ul className="mt-6 space-y-3 text-sm leading-7 text-white/80">
-                <li>Manage your profile and publishing presence</li>
-                <li>Access category-based content faster</li>
-                <li>Continue browsing from one unified dashboard</li>
-              </ul>
-            </article>
+          <div className="rounded-[2rem] border border-[var(--editable-border)] bg-white/80 p-6 shadow-[0_24px_70px_rgba(16,36,31,0.12)] backdrop-blur sm:p-8">
+            <h2 className="text-2xl font-black tracking-[-0.04em]">{pagesContent.auth.login.formTitle}</h2>
+            <EditableLocalLoginForm />
+            <p className="mt-5 text-sm opacity-70">New here? <Link href="/signup" className="font-black underline-offset-4 hover:underline">{pagesContent.auth.login.createCta}</Link></p>
           </div>
         </section>
       </main>
